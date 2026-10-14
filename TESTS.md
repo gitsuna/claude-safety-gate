@@ -64,9 +64,9 @@ what this proves:
 
 this file covers git push, deploys, public posts, sending email and texts, and payments. 20 cases.
 
-**status: not run on the build machine.** the computer this gate was built on runs its own, stricter safety hook. that hook refused to run any script whose text contains real posting, mail or payment addresses, even inside a test that sends nothing. that is the correct behavior for that hook, so it was not worked around. the cases were checked by reading each one against its rule instead, which is weaker evidence than a run.
+run on 2026-10-14, Windows 11, by hand in PowerShell outside Claude. result: **20 of 20 cases behaved as expected, exit 0.** (the build machine runs its own, stricter safety hook that refuses to let an agent run this file, because its text names real posting, mail and payment routes. that is the correct behavior for that hook, so the run was done by hand.)
 
-run it yourself (step below) and you should see **20 of 20 cases behaved as expected.** if you do not, see "if a test fails".
+run it yourself (step below): you should see the same 20 of 20. if you do not, see "if a test fails".
 
 ## run it yourself
 
