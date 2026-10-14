@@ -1,0 +1,162 @@
+{
+  "_read_me": "The One-Person OS safety gate config. mode is ask (Claude must get your click first) or block (Claude can never do it, you do it yourself). each rule: name, why, tools (which tools it watches, a regex on the tool name), patterns (regexes, case-insensitive), enabled (true or false). a broken file blocks every action until fixed. that is on purpose.",
+  "mode": "ask",
+  "rules": [
+    {
+      "name": "git-push",
+      "why": "pushing code to a remote can publish it or trigger a live deploy",
+      "tools": "Bash|PowerShell",
+      "patterns": [
+        "\\bgit(\\.exe)?(\\s+(-[cC]\\s+\\S+|--?[\\w-]+(=\\S+)?))*\\s+push\\b"
+      ]
+    },
+    {
+      "name": "git-push-connector",
+      "why": "a connector that pushes files or merges code changes the live copy",
+      "tools": "mcp__.*",
+      "patterns": [
+        "^mcp__\\S*(push_files|create_or_update_file|merge_pull_request|merge_pr)"
+      ]
+    },
+    {
+      "name": "deploy",
+      "why": "deploys and package publishes change what the public sees",
+      "tools": "Bash|PowerShell",
+      "patterns": [
+        "\\b(vercel|netlify|wrangler|flyctl|heroku|surge|gh-pages)\\b",
+        "\\bfirebase\\s+deploy\\b",
+        "\\bfly\\s+deploy\\b",
+        "\\brailway\\s+up\\b",
+        "\\b(npm|pnpm|yarn|bun)\\s+(run\\s+)?deploy\\b",
+        "\\b(npm|pnpm|yarn)\\s+publish\\b",
+        "\\btwine\\s+upload\\b",
+        "\\bdocker\\s+push\\b",
+        "\\bgh\\s+(release\\s+create|pr\\s+merge|workflow\\s+run)\\b"
+      ]
+    },
+    {
+      "name": "deploy-connector",
+      "why": "a connector that deploys or publishes a site changes what the public sees",
+      "tools": "mcp__.*",
+      "patterns": [
+        "^mcp__\\S*(deploy|publish_site|publish_website)"
+      ]
+    },
+    {
+      "name": "public-post",
+      "why": "posting to social media or a public channel cannot be taken back",
+      "tools": "Bash|PowerShell|WebFetch",
+      "patterns": [
+        "api\\.(twitter|x)\\.com",
+        "graph\\.(facebook|instagram)\\.com",
+        "api\\.linkedin\\.com",
+        "graph\\.threads\\.net",
+        "bsky\\.social/xrpc",
+        "oauth\\.reddit\\.com",
+        "hooks\\.slack\\.com",
+        "discord(app)?\\.com/api/webhooks",
+        "api\\.telegram\\.org/bot"
+      ]
+    },
+    {
+      "name": "public-post-connector",
+      "why": "a connector that posts or publishes puts words in public under your name",
+      "tools": "mcp__.*",
+      "patterns": [
+        "^mcp__\\S*(publish|create_post|schedule_post|tweet|post_message|postmessage)"
+      ]
+    },
+    {
+      "name": "send-message",
+      "why": "emails, texts and DMs go out under your name and cannot be unsent",
+      "tools": "Bash|PowerShell|WebFetch",
+      "patterns": [
+        "\\bsmtplib\\b",
+        "\\bsendmail\\b",
+        "send-mailmessage",
+        "api\\.sendgrid\\.com",
+        "api\\.mailgun\\.net",
+        "api\\.resend\\.com",
+        "api\\.postmarkapp\\.com",
+        "googleapis\\.com/\\S*/messages/send",
+        "graph\\.microsoft\\.com\\S*sendmail",
+        "api\\.twilio\\.com",
+        "chat\\.postmessage"
+      ]
+    },
+    {
+      "name": "send-message-connector",
+      "why": "a connector that sends, replies or forwards speaks for you",
+      "tools": "mcp__.*",
+      "patterns": [
+        "^mcp__\\S*(send|reply|forward|respond_to)"
+      ]
+    },
+    {
+      "name": "payments",
+      "why": "anything that charges, pays, refunds or buys moves real money",
+      "tools": "Bash|PowerShell|WebFetch",
+      "patterns": [
+        "api\\.stripe\\.com",
+        "\\bstripe\\s+(charges|payment_intents|checkout|invoices|subscriptions|refunds|payouts|transfers)\\b",
+        "api(-m)?\\.paypal\\.com",
+        "connect\\.squareup\\.com",
+        "api\\.lemonsqueezy\\.com",
+        "api\\.gumroad\\.com"
+      ]
+    },
+    {
+      "name": "payments-connector",
+      "why": "a connector that charges, buys or transfers moves real money",
+      "tools": "mcp__.*",
+      "patterns": [
+        "^mcp__\\S*(charge|payment|invoice|checkout|purchase|buy_|refund|subscription|transfer|payout)"
+      ]
+    },
+    {
+      "name": "delete-files",
+      "why": "deleting files can lose work for good",
+      "tools": "Bash|PowerShell",
+      "patterns": [
+        "(^|[\\s;&|(])rm\\s",
+        "\\brmdir\\b",
+        "(^|[\\s;&|(])(del|erase|rd|ri)\\s",
+        "\\bremove-item\\b",
+        "\\bclear-content\\b",
+        "\\bshutil\\.rmtree\\b",
+        "\\bos\\.(remove|unlink|rmdir)\\b",
+        "\\.unlink\\(",
+        "\\bfind\\b.*\\s-delete\\b",
+        "\\bgit\\s+clean\\b",
+        "\\bgit\\s+reset\\s+--hard\\b"
+      ]
+    },
+    {
+      "name": "delete-connector",
+      "why": "a connector that deletes or trashes can lose data for good",
+      "tools": "mcp__.*",
+      "patterns": [
+        "^mcp__\\S*(delete|trash|remove|destroy|drop)"
+      ]
+    },
+    {
+      "name": "protect-the-gate",
+      "why": "Claude must not edit the safety gate or its settings, only you do",
+      "tools": "Write|Edit|MultiEdit|NotebookEdit|Bash|PowerShell",
+      "patterns": [
+        "safety_gate",
+        "\\.claude[/\\\\]settings(\\.local)?\\.json",
+        "\\.claude[/\\\\]hooks"
+      ]
+    },
+    {
+      "name": "browser-actions",
+      "why": "a browser click can post, buy or send. off by default because it asks on every click",
+      "tools": "mcp__.*",
+      "enabled": false,
+      "patterns": [
+        "^mcp__\\S*(click|form_input|computer|type_text|fill)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"C:/Users/YOUR-WINDOWS-USERNAME/.claude/hooks/safety_gate.py\" || exit 2",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+  }
+}
