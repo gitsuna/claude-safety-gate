@@ -1,6 +1,6 @@
 # safety gate for Claude Code
 
-free, open, about 150 lines of Python. Claude stops and asks before it pushes, deploys, posts, sends, pays or deletes. new here? start with `QUICKSTART.md` (10 minutes).
+free, open, 160 lines of Python. Claude stops and asks before it pushes, deploys, posts, sends, pays or deletes. new here? start with `QUICKSTART.md` (10 minutes).
 
 **what this does for your business:** Claude can do real things on your computer. that is the point. but a few actions can hurt you in one click: a half-finished website goes live, an email goes to the wrong person, money moves, a folder of work disappears. the safety gate makes Claude stop and ask you before any of those. you stay the only one who can press the big buttons.
 
@@ -8,7 +8,7 @@ free, open, about 150 lines of Python. Claude stops and asks before it pushes, d
 
 | file | what it is |
 |---|---|
-| `safety_gate.py` | the gate itself. a small Python script, about 150 lines, no extra installs |
+| `safety_gate.py` | the gate itself. a small Python script, 160 lines, no extra installs |
 | `safety_gate_config.json` | the list of risky actions it watches. you can edit it |
 | `settings-snippet-windows.json` | the lines that switch the gate on, for Windows |
 | `settings-snippet-mac.json` | the same, for Mac |
