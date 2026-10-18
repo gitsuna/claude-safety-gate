@@ -2,6 +2,8 @@
 
 free, open, 160 lines of Python. Claude stops and asks before it pushes, deploys, posts, sends, pays or deletes. new here? start with `QUICKSTART.md` (10 minutes).
 
+the gate is module 3 of [The One-Person OS](https://sunabuilds.ai/os?utm_source=github), a $39 starter kit for running a one-person business on Claude. the gate stays free on its own. want an email when a Claude Code update changes how hooks work, with the fix? sign up at [sunabuilds.ai/gate](https://sunabuilds.ai/gate?utm_source=github).
+
 **what this does for your business:** Claude can do real things on your computer. that is the point. but a few actions can hurt you in one click: a half-finished website goes live, an email goes to the wrong person, money moves, a folder of work disappears. the safety gate makes Claude stop and ask you before any of those. you stay the only one who can press the big buttons.
 
 ## what is in this folder
@@ -105,4 +107,4 @@ after any change, run the tests again. a typo in the file makes the gate block e
 
 ## where this comes from
 
-this gate is module 3 of 6 in **The One-Person OS by suna from sunabuilds**, a starter kit for running a one-person business on Claude. the gate stops Claude doing the wrong thing. the kit teaches it the right thing, for your business, every session: a router so Claude knows who you are, memory that carries decisions between sessions, loops for repeatable work, a knowledge vault and three skills. details at sunabuilds.ai/os.
+this gate is module 3 of 6 in **The One-Person OS by suna from sunabuilds**, a starter kit for running a one-person business on Claude. the gate stops Claude doing the wrong thing. the kit teaches it the right thing, for your business, every session: a router so Claude knows who you are, memory that carries decisions between sessions, loops for repeatable work, a knowledge vault and three skills. details at [sunabuilds.ai/os](https://sunabuilds.ai/os?utm_source=github).
