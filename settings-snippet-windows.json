@@ -6,8 +6,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"C:/Users/YOUR-WINDOWS-USERNAME/.claude/hooks/safety_gate.py\" || exit 2",
-            "timeout": 20
+            "command": "python",
+            "args": ["C:/Users/YOUR-WINDOWS-USERNAME/.claude/hooks/safety_gate.py"],
+            "timeout": 20,
+            "onFailure": "block"
           }
         ]
       }

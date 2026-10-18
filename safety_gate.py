@@ -21,8 +21,8 @@ fail closed
   bad pattern, any crash), the script blocks the action with exit code 2.
 - the only exception: the read-only tools listed in READ_ONLY_TOOLS still
   pass on an error, so Claude can still read files and help you fix it.
-- the settings.json line adds "|| exit 2", so even if Python itself is
-  missing, the action is blocked instead of allowed.
+- the settings.json snippet sets "onFailure": "block", so a gate that
+  can't start, crashes or runs out of time blocks the action too.
 
 limits (honest)
 - this is a pattern guard. it catches the normal ways an agent deploys,
@@ -40,7 +40,7 @@ import sys
 
 CONFIG_NAME = "safety_gate_config.json"
 READ_ONLY_TOOLS = {"Read", "Glob", "Grep", "LS"}
-SHELL_TOOLS = {"Bash", "PowerShell"}
+SHELL_TOOLS = {"Bash", "PowerShell", "Monitor"}
 WRITE_TOOLS = {"Write", "Edit", "MultiEdit", "NotebookEdit"}
 MARK = "SAFETY-GATE"
 
@@ -104,7 +104,7 @@ def load_config():
 def text_to_scan(tool, tool_input):
     """What the rules look at, per tool type."""
     if tool in SHELL_TOOLS:
-        return str(tool_input.get("command", ""))
+        return str(tool_input.get("command") or flatten(tool_input))
     if tool in WRITE_TOOLS:
         # the path is what matters: is Claude editing the gate itself?
         return str(tool_input.get("file_path") or tool_input.get("notebook_path") or "")

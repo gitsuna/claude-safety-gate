@@ -7,7 +7,8 @@
           {
             "type": "command",
             "command": "python3 \"$HOME/.claude/hooks/safety_gate.py\" || exit 2",
-            "timeout": 20
+            "timeout": 20,
+            "onFailure": "block"
           }
         ]
       }

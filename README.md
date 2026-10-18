@@ -26,7 +26,7 @@ the gate reads what Claude is about to do and checks it against your list:
 - **nothing risky:** it stays silent. Claude carries on. you will not notice it.
 - **risky, mode "ask":** Claude Code pauses and shows you a prompt with the reason. you choose allow or deny.
 - **risky, mode "block":** the action is cancelled. Claude is told to tell you what it wanted to do, and you do it yourself.
-- **anything goes wrong** (a broken config, a crash, Python missing): the action is blocked. this is called failing closed. a broken lock should keep the door shut, not swing it open.
+- **anything goes wrong** (a broken config, a crash, Python missing, the gate taking too long): the action is blocked. this is called failing closed. a broken lock should keep the door shut, not swing it open.
 
 ## what it watches out of the box
 
@@ -44,7 +44,7 @@ an eighth rule, **browser-actions**, is in the config but switched off. it asks 
 
 ## install (10 minutes)
 
-you need Python 3.8 or newer. check with `python --version` (Windows) or `python3 --version` (Mac). if it is missing, install it from python.org. on Windows, tick "Add python.exe to PATH" in the installer.
+you need Claude Code 2.1.295 or newer (check with `claude --version`, update with `claude update`; in the Claude desktop app, update the app, which brings its Claude Code with it) and Python 3.8 or newer (check with `python --version` on Windows or `python3 --version` on Mac). if Python is missing, install it from python.org. on Windows, tick "Add python.exe to PATH" in the installer. Git for Windows is not needed for the gate.
 
 1. **find your Claude folder.** Windows: `C:\Users\<your name>\.claude\`. Mac: your home folder, then `.claude` (in Finder press Cmd+Shift+. to show hidden folders). if it does not exist, open Claude Code once and it will be created.
 2. **make a `hooks` folder inside it** if there is not one.
@@ -54,16 +54,26 @@ you need Python 3.8 or newer. check with `python --version` (Windows) or `python
 6. **paste the snippet** from `settings-snippet-windows.json` or `settings-snippet-mac.json`.
    - empty file: paste the whole snippet.
    - file already has content: add the `"hooks"` part inside the outer `{ }`, with a comma after the item before it. if there is already a `"hooks"` section, add the `PreToolUse` entry inside it. if unsure, paste your file and the snippet into a Claude chat and ask it to merge them. then paste the result back yourself.
-   - Windows: replace `YOUR-WINDOWS-USERNAME` with your real folder name. use forward slashes `/` in the path.
+   - Windows: replace `YOUR-WINDOWS-USERNAME` with your real folder name. use forward slashes `/` in the path. the Windows snippet starts Python directly, with no shell in between, so it works with or without Git for Windows.
+   - both snippets set `"onFailure": "block"`: if the gate can't start, crashes or takes longer than 20 seconds, the action is blocked, not let through.
 7. **restart Claude Code.**
 8. **live check.** ask Claude: "please delete the file test-delete-me.txt" (make an empty file with that name first). you should get a prompt mentioning SAFETY-GATE. deny it. the gate works.
+   - in the desktop app, read the prompt before you click. the highlighted button may be "Always allow". choose "Deny" here, and "Allow once" when you do want an action.
+   - no prompt at all? check `claude --version` (2.1.295 or newer) and the path in `settings.json`, then restart Claude Code.
+
+## upgrading from v1.0
+
+1. copy the new `safety_gate.py` and the `tests` folder over the old ones.
+2. the config: if you never edited `safety_gate_config.json`, copy the new one over it. if you did (for example you switched to block mode or added patterns), keep yours and add `|Monitor` after `PowerShell` in every rule whose `"tools"` line names PowerShell (7 rules). that keeps your mode and your patterns.
+3. replace your `PreToolUse` entry in `settings.json` with the new snippet. on Windows this matters most: the v1.0 line ended in `|| exit 2`, which Windows PowerShell can't read, and on a PC with neither Git for Windows nor PowerShell 7 (a fresh Windows 11) that line either never runs the gate or blocks everything, depending on your Claude Code version.
+4. run the tests (the core suite now ends with "33 of 33"), restart Claude Code, and do the live check.
 
 ## ask or block
 
 - **"ask" (default)** is the friendly mode. you approve each risky action in the moment.
 - **"block"** is the strict mode. Claude can never do these actions. it prepares everything, then hands you the exact command to run yourself.
 
-use **block** if you ever run Claude Code with permission prompts turned off (sometimes called "skip permissions" or "bypass permissions" mode). an "ask" may not show a prompt in that mode, depending on your Claude Code version. block mode does not depend on prompts at all. to switch, open `safety_gate_config.json` and change `"mode": "ask"` to `"mode": "block"`.
+use **block** if you ever run Claude Code with permission prompts turned off (sometimes called "skip permissions" or "bypass permissions" mode). an "ask" may not show a prompt in that mode, depending on your Claude Code version. block mode does not depend on prompts at all. in auto mode, Claude Code's docs say a hook's "ask" always shows a prompt. one user has reported a browser action going through without one; that isn't confirmed. if you rely on the connector or browser rules in auto mode, block mode removes the doubt. to switch, open `safety_gate_config.json` and change `"mode": "ask"` to `"mode": "block"`.
 
 ## changing the list
 
@@ -71,7 +81,7 @@ open `safety_gate_config.json` in a text editor. each rule has:
 
 - `name`: a short label you will see in the prompt.
 - `why`: the plain-English reason, also shown in the prompt.
-- `tools`: which Claude tools it watches. `Bash|PowerShell` means terminal commands. `mcp__.*` means connectors.
+- `tools`: which Claude tools it watches. `Bash|PowerShell|Monitor` means terminal commands (Monitor is the tool Claude uses to run a command in the background). `mcp__.*` means connectors.
 - `patterns`: what to look for. these are "regular expressions". the easy version: a plain word works, and `\\b` means "word edge". example, to gate a script called `send-invoices.py`, add `"send-invoices"` to a rule's patterns.
 - `enabled`: `false` turns a rule off without deleting it.
 
@@ -87,7 +97,8 @@ after any change, run the tests again. a typo in the file makes the gate block e
 
 - a prompt for something harmless: allow it. if it happens often, make that rule's pattern narrower.
 - everything is suddenly blocked, but Claude can still read files: the config is broken. ask Claude to read `safety_gate_config.json` and find the error, then fix it yourself.
-- everything is blocked, reading included: Python moved or the path in `settings.json` is wrong. Claude can't help from inside this state. fix the path in `settings.json` yourself (see TROUBLESHOOTING.md in the kit, or the install steps above), then restart Claude Code.
+- everything is blocked, reading included: Python moved, the path in `settings.json` is wrong, or your settings still have the v1.0 Windows line (see "upgrading from v1.0"). Claude can't help from inside this state. fix `settings.json` yourself (see TROUBLESHOOTING.md in the kit, or the install steps above), then restart Claude Code.
+- a block that mentions neither SAFETY-GATE nor a hook isn't the gate. it comes from Claude Code's own permission system (for example the safety check in auto mode). a gate that can't start or runs out of time shows a hook error instead of SAFETY-GATE.
 - to switch the gate off completely: remove the `PreToolUse` entry from `settings.json` and restart Claude Code. do this yourself, never through Claude.
 
 ---

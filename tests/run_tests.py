@@ -8,8 +8,9 @@ run it from anywhere:
 
 each case feeds a fake Claude Code message into safety_gate.py on stdin and
 checks what comes back: PASS (allowed), ASK (paused for your approval) or
-BLOCK (cancelled). this file covers safe actions, deleting files, guarding
-the gate itself, and every fail-closed error path. the push, deploy, post,
+BLOCK (cancelled). this file covers safe actions, deleting files (also through
+the Monitor tool, which runs commands in the background), guarding the gate
+itself, and every fail-closed error path. the push, deploy, post,
 send and payment cases live in run_gated_tests.py. it changes nothing on
 your computer: the error cases use temporary config files that are deleted
 afterwards.
@@ -30,6 +31,7 @@ CASES = [
     ("run a local script", ev("Bash", command="python scripts/report.py"), "PASS"),
     ("connector read", ev("mcp__notes__search_pages", query="pricing"), "PASS"),
     ("word 'remove' inside a file name is fine", ev("Bash", command="cat remove-list.md"), "PASS"),
+    ("Monitor watching a log", ev("Monitor", command="tail -f logs/app.log"), "PASS"),
     ("rm -rf", ev("Bash", command="rm -rf old-drafts"), "ASK"),
     ("rm after &&", ev("Bash", command="cd tmp && rm notes.txt"), "ASK"),
     ("Remove-Item", ev("PowerShell", command="Remove-Item -Recurse .\\old"), "ASK"),
@@ -37,6 +39,7 @@ CASES = [
     ("python shutil.rmtree", ev("Bash", command='python -c "import shutil; shutil.rmtree(\'x\')"'), "ASK"),
     ("git reset --hard", ev("Bash", command="git reset --hard HEAD~1"), "ASK"),
     ("git clean", ev("Bash", command="git clean -fd"), "ASK"),
+    ("Monitor running rm -rf", ev("Monitor", command="rm -rf build"), "ASK"),
     ("connector delete_file", ev("mcp__drive__delete_file", id="123"), "ASK"),
     ("edit the gate itself", ev("Edit", file_path="/home/me/.claude/hooks/safety_gate.py", old_string="a", new_string="b"), "ASK"),
     ("write settings.json", ev("Write", file_path="C:\\Users\\me\\.claude\\settings.json", content="{}"), "ASK"),

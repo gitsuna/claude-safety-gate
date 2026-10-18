@@ -14,7 +14,7 @@ nothing in any test is actually run. the commands are just text inside the fake 
 
 ## core suite: `tests/run_tests.py`
 
-run on 2026-10-13, Windows 11, Python 3.14. result: **31 of 31 cases behaved as expected, exit 0.**
+run on 2026-10-17 for v1.1, Windows 11, Python 3.14. result: **33 of 33 cases behaved as expected, exit 0.**
 
 ```
 ok    read a file                                  expected PASS  got PASS
@@ -25,6 +25,7 @@ ok    write a draft file                           expected PASS  got PASS
 ok    run a local script                           expected PASS  got PASS
 ok    connector read                               expected PASS  got PASS
 ok    word 'remove' inside a file name is fine     expected PASS  got PASS
+ok    Monitor watching a log                       expected PASS  got PASS
 ok    rm -rf                                       expected ASK   got ASK
 ok    rm after &&                                  expected ASK   got ASK
 ok    Remove-Item                                  expected ASK   got ASK
@@ -32,6 +33,7 @@ ok    del on Windows                               expected ASK   got ASK
 ok    python shutil.rmtree                         expected ASK   got ASK
 ok    git reset --hard                             expected ASK   got ASK
 ok    git clean                                    expected ASK   got ASK
+ok    Monitor running rm -rf                       expected ASK   got ASK
 ok    connector delete_file                        expected ASK   got ASK
 ok    edit the gate itself                         expected ASK   got ASK
 ok    write settings.json                          expected ASK   got ASK
@@ -49,13 +51,13 @@ ok    broken config JSON: blocked                  expected BLOCK got BLOCK
 ok    bad pattern in config: blocked               expected BLOCK got BLOCK
 ok    unknown mode in config: blocked              expected BLOCK got BLOCK
 
-31 of 31 cases behaved as expected
+33 of 33 cases behaved as expected
 ```
 
 what this proves:
 
 - normal work (reading, listing, git status, writing drafts, running a local script) is not slowed down.
-- deleting files, by any of the common routes on Windows, Mac or inside Python, stops and asks.
+- deleting files, by any of the common routes on Windows, Mac or inside Python, stops and asks. so does a delete run through Monitor, the tool Claude uses for background commands.
 - Claude cannot quietly edit the gate, its config, or your Claude settings.
 - **fail closed:** bad input, an empty message, a missing config, a broken config, a bad pattern or a wrong mode all block the action. only the read-only tools (Read, Glob, Grep, LS) keep working, so Claude can still read files and help you fix the problem.
 - block mode turns every "ask" into a hard block.
@@ -64,7 +66,7 @@ what this proves:
 
 this file covers git push, deploys, public posts, sending email and texts, and payments. 20 cases.
 
-run on 2026-10-14, Windows 11, by hand in PowerShell outside Claude. result: **20 of 20 cases behaved as expected, exit 0.** (the build machine runs its own, stricter safety hook that refuses to let an agent run this file, because its text names real posting, mail and payment routes. that is the correct behavior for that hook, so the run was done by hand.)
+v1.0: run on 2026-10-14, Windows 11, by hand in PowerShell outside Claude. result: **20 of 20 cases behaved as expected, exit 0.** v1.1 added Monitor to the rules' tool lists and to the script's shell tools, and none of these 20 cases use Monitor, so they are expected to behave the same. v1.1 re-run: [SUNA-RUN-PENDING] (the build machine runs its own, stricter safety hook that refuses to let an agent run this file, because its text names real posting, mail and payment routes. that is the correct behavior for that hook, so the run was done by hand.)
 
 run it yourself (step below): you should see the same 20 of 20. if you do not, see "if a test fails".
 
@@ -88,3 +90,4 @@ the tests use `safety_gate.py` and `safety_gate_config.json` from the folder one
 
 - the hook only sees what Claude Code shows it. a command hidden inside a script file (for example `python deploy.py` where the script deploys) looks like "run a local script" and passes. keep risky scripts out of your business folder, or name them clearly and add a pattern for them.
 - whether your Claude Code version shows the "ask" prompt in every permission mode. see README.md, "ask or block".
+- how Claude Code starts the gate. the tests feed messages to the script directly, so they can't check your `settings.json` line. the live check in QUICKSTART.md does.

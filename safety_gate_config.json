@@ -5,7 +5,7 @@
     {
       "name": "git-push",
       "why": "pushing code to a remote can publish it or trigger a live deploy",
-      "tools": "Bash|PowerShell",
+      "tools": "Bash|PowerShell|Monitor",
       "patterns": [
         "\\bgit(\\.exe)?(\\s+(-[cC]\\s+\\S+|--?[\\w-]+(=\\S+)?))*\\s+push\\b"
       ]
@@ -21,7 +21,7 @@
     {
       "name": "deploy",
       "why": "deploys and package publishes change what the public sees",
-      "tools": "Bash|PowerShell",
+      "tools": "Bash|PowerShell|Monitor",
       "patterns": [
         "\\b(vercel|netlify|wrangler|flyctl|heroku|surge|gh-pages)\\b",
         "\\bfirebase\\s+deploy\\b",
@@ -45,7 +45,7 @@
     {
       "name": "public-post",
       "why": "posting to social media or a public channel cannot be taken back",
-      "tools": "Bash|PowerShell|WebFetch",
+      "tools": "Bash|PowerShell|Monitor|WebFetch",
       "patterns": [
         "api\\.(twitter|x)\\.com",
         "graph\\.(facebook|instagram)\\.com",
@@ -69,7 +69,7 @@
     {
       "name": "send-message",
       "why": "emails, texts and DMs go out under your name and cannot be unsent",
-      "tools": "Bash|PowerShell|WebFetch",
+      "tools": "Bash|PowerShell|Monitor|WebFetch",
       "patterns": [
         "\\bsmtplib\\b",
         "\\bsendmail\\b",
@@ -95,7 +95,7 @@
     {
       "name": "payments",
       "why": "anything that charges, pays, refunds or buys moves real money",
-      "tools": "Bash|PowerShell|WebFetch",
+      "tools": "Bash|PowerShell|Monitor|WebFetch",
       "patterns": [
         "api\\.stripe\\.com",
         "\\bstripe\\s+(charges|payment_intents|checkout|invoices|subscriptions|refunds|payouts|transfers)\\b",
@@ -116,7 +116,7 @@
     {
       "name": "delete-files",
       "why": "deleting files can lose work for good",
-      "tools": "Bash|PowerShell",
+      "tools": "Bash|PowerShell|Monitor",
       "patterns": [
         "(^|[\\s;&|(])rm\\s",
         "\\brmdir\\b",
@@ -142,7 +142,7 @@
     {
       "name": "protect-the-gate",
       "why": "Claude must not edit the safety gate or its settings, only you do",
-      "tools": "Write|Edit|MultiEdit|NotebookEdit|Bash|PowerShell",
+      "tools": "Write|Edit|MultiEdit|NotebookEdit|Bash|PowerShell|Monitor",
       "patterns": [
         "safety_gate",
         "\\.claude[/\\\\]settings(\\.local)?\\.json",
