@@ -66,7 +66,7 @@ what this proves:
 
 this file covers git push, deploys, public posts, sending email and texts, and payments. 20 cases.
 
-v1.0: run on 2026-10-14, Windows 11, by hand in PowerShell outside Claude. result: **20 of 20 cases behaved as expected, exit 0.** v1.1 added Monitor to the rules' tool lists and to the script's shell tools, and none of these 20 cases use Monitor, so they are expected to behave the same. v1.1 re-run: [SUNA-RUN-PENDING] (the build machine runs its own, stricter safety hook that refuses to let an agent run this file, because its text names real posting, mail and payment routes. that is the correct behavior for that hook, so the run was done by hand.)
+v1.0: run on 2026-10-14, Windows 11, by hand in PowerShell outside Claude. result: **20 of 20 cases behaved as expected, exit 0.** v1.1 added Monitor to the rules' tool lists and to the script's shell tools, and none of these 20 cases use Monitor, so they are expected to behave the same. v1.1: run on 2026-10-17, Windows 11, by hand in PowerShell outside Claude. result: **20 of 20 cases behaved as expected.** (the build machine runs its own, stricter safety hook that refuses to let an agent run this file, because its text names real posting, mail and payment routes. that is the correct behavior for that hook, so the run was done by hand.)
 
 run it yourself (step below): you should see the same 20 of 20. if you do not, see "if a test fails".
 
