@@ -1,6 +1,6 @@
 # changelog
 
-## unreleased
+## v1.2 (2026-11-22)
 
 - **one more way of deleting is covered.** the delete-files rule now also stops .NET delete calls made from PowerShell, such as `[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory(...)` and `[System.IO.Directory]::Delete(...)`. before this they passed the gate. found by testing three commands from real data-loss reports on Anthropic's issue tracker; the other two (an rm with a wildcard, a find with -delete) were already stopped.
 - core test suite: 36 cases (3 new, the three reported commands). gated suite unchanged at 20 cases.
