@@ -1,5 +1,10 @@
 # changelog
 
+## unreleased
+
+- **one more way of deleting is covered.** the delete-files rule now also stops .NET delete calls made from PowerShell, such as `[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory(...)` and `[System.IO.Directory]::Delete(...)`. before this they passed the gate. found by testing three commands from real data-loss reports on Anthropic's issue tracker; the other two (an rm with a wildcard, a find with -delete) were already stopped.
+- core test suite: 36 cases (3 new, the three reported commands). gated suite unchanged at 20 cases.
+
 ## v1.1 (2026-10-17)
 
 - **Windows fix.** the Windows settings snippet now starts Python directly (`"command": "python"` with the script in `"args"`), with no shell. the v1.0 line ended in `|| exit 2`, which Windows PowerShell 5.1 can't read. Claude Code no longer needs Git for Windows, and without it (and without PowerShell 7) it runs hooks in Windows PowerShell, so on a fresh Windows 11 the v1.0 line either never ran the gate or blocked every action, depending on the Claude Code version.

@@ -14,7 +14,7 @@ nothing in any test is actually run. the commands are just text inside the fake 
 
 ## core suite: `tests/run_tests.py`
 
-run on 2026-10-17 for v1.1, Windows 11, Python 3.14. result: **33 of 33 cases behaved as expected, exit 0.**
+run on 2026-11-22 after the delete rule gained one pattern, Windows 11, Python 3.14. result: **36 of 36 cases behaved as expected, exit 0.** (v1.1, 2026-10-17: 33 of 33.)
 
 ```
 ok    read a file                                  expected PASS  got PASS
@@ -34,6 +34,9 @@ ok    python shutil.rmtree                         expected ASK   got ASK
 ok    git reset --hard                             expected ASK   got ASK
 ok    git clean                                    expected ASK   got ASK
 ok    Monitor running rm -rf                       expected ASK   got ASK
+ok    rm -rf with a prefix glob (issue 111167)     expected ASK   got ASK
+ok    find -delete with an unset variable (issue 102901) expected ASK   got ASK
+ok    PowerShell DeleteDirectory (issue 106818)    expected ASK   got ASK
 ok    connector delete_file                        expected ASK   got ASK
 ok    edit the gate itself                         expected ASK   got ASK
 ok    write settings.json                          expected ASK   got ASK
@@ -51,13 +54,13 @@ ok    broken config JSON: blocked                  expected BLOCK got BLOCK
 ok    bad pattern in config: blocked               expected BLOCK got BLOCK
 ok    unknown mode in config: blocked              expected BLOCK got BLOCK
 
-33 of 33 cases behaved as expected
+36 of 36 cases behaved as expected
 ```
 
 what this proves:
 
 - normal work (reading, listing, git status, writing drafts, running a local script) is not slowed down.
-- deleting files, by any of the common routes on Windows, Mac or inside Python, stops and asks. so does a delete run through Monitor, the tool Claude uses for background commands.
+- deleting files, by any of the common routes on Windows, Mac or inside Python, stops and asks. so does a delete run through Monitor, the tool Claude uses for background commands. three cases come from real data-loss reports on Anthropic's issue tracker: an rm with a wildcard after a quoted path, a find with -delete, and a PowerShell call to a .NET delete method.
 - Claude cannot quietly edit the gate, its config, or your Claude settings.
 - **fail closed:** bad input, an empty message, a missing config, a broken config, a bad pattern or a wrong mode all block the action. only the read-only tools (Read, Glob, Grep, LS) keep working, so Claude can still read files and help you fix the problem.
 - block mode turns every "ask" into a hard block.

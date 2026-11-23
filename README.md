@@ -68,7 +68,7 @@ you need Claude Code 2.1.295 or newer (check with `claude --version`, update wit
 1. copy the new `safety_gate.py` and the `tests` folder over the old ones.
 2. the config: if you never edited `safety_gate_config.json`, copy the new one over it. if you did (for example you switched to block mode or added patterns), keep yours and add `|Monitor` after `PowerShell` in every rule whose `"tools"` line names PowerShell (7 rules). that keeps your mode and your patterns.
 3. replace your `PreToolUse` entry in `settings.json` with the new snippet. on Windows this matters most: the v1.0 line ended in `|| exit 2`, which Windows PowerShell can't read, and on a PC with neither Git for Windows nor PowerShell 7 (a fresh Windows 11) that line either never runs the gate or blocks everything, depending on your Claude Code version.
-4. run the tests (the core suite now ends with "33 of 33"), restart Claude Code, and do the live check.
+4. run the tests (the core suite now ends with "36 of 36"), restart Claude Code, and do the live check.
 
 ## ask or block
 

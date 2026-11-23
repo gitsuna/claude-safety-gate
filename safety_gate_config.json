@@ -127,6 +127,7 @@
         "\\bos\\.(remove|unlink|rmdir)\\b",
         "\\.unlink\\(",
         "\\bfind\\b.*\\s-delete\\b",
+        "::delete(directory|file)?\\s*\\(",
         "\\bgit\\s+clean\\b",
         "\\bgit\\s+reset\\s+--hard\\b"
       ]
