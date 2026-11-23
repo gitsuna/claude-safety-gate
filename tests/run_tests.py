@@ -40,6 +40,10 @@ CASES = [
     ("git reset --hard", ev("Bash", command="git reset --hard HEAD~1"), "ASK"),
     ("git clean", ev("Bash", command="git clean -fd"), "ASK"),
     ("Monitor running rm -rf", ev("Monitor", command="rm -rf build"), "ASK"),
+    # three delete shapes from real reports on Anthropic's tracker (2026-10 and 2026-11)
+    ("rm -rf with a prefix glob (issue 111167)", ev("Bash", command='rm -rf "C:/Users/me/Desktop/Project"* 2>/dev/null'), "ASK"),
+    ("find -delete with an unset variable (issue 102901)", ev("Bash", command="find $T -type f -delete; find $T -depth -type d -empty -delete"), "ASK"),
+    ("PowerShell DeleteDirectory (issue 106818)", ev("Bash", command="pwsh -NoProfile -Command \"Add-Type -AssemblyName Microsoft.VisualBasic; [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory('C:\\Users\\me\\data\\', 'OnlyErrorDialogs', 'SendToRecycleBin')\""), "ASK"),
     ("connector delete_file", ev("mcp__drive__delete_file", id="123"), "ASK"),
     ("edit the gate itself", ev("Edit", file_path="/home/me/.claude/hooks/safety_gate.py", old_string="a", new_string="b"), "ASK"),
     ("write settings.json", ev("Write", file_path="C:\\Users\\me\\.claude\\settings.json", content="{}"), "ASK"),
