@@ -75,7 +75,7 @@ you need Claude Code 2.1.295 or newer (check with `claude --version`, update wit
 - **"ask" (default)** is the friendly mode. you approve each risky action in the moment.
 - **"block"** is the strict mode. Claude can never do these actions. it prepares everything, then hands you the exact command to run yourself.
 
-use **block** if you ever run Claude Code with permission prompts turned off (sometimes called "skip permissions" or "bypass permissions" mode). an "ask" may not show a prompt in that mode, depending on your Claude Code version. block mode does not depend on prompts at all. in auto mode, Claude Code's docs say a hook's "ask" always shows a prompt. one user has reported a browser action going through without one; that isn't confirmed. if you rely on the connector or browser rules in auto mode, block mode removes the doubt. to switch, open `safety_gate_config.json` and change `"mode": "ask"` to `"mode": "block"`.
+use **block** if you ever run Claude Code with permission prompts turned off (sometimes called "skip permissions" or "bypass permissions" mode). an "ask" may not show a prompt in that mode, depending on your Claude Code version. block mode does not depend on prompts at all. in auto mode, Claude Code's docs say a hook's "ask" normally shows a prompt. for some actions, Claude Code's own safety check can say no first, before any prompt appears. one user has reported a browser action going through without one; that isn't confirmed. if you rely on the connector or browser rules in auto mode, block mode removes the doubt. to switch, open `safety_gate_config.json` and change `"mode": "ask"` to `"mode": "block"`.
 
 ## changing the list
 
